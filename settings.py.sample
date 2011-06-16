@@ -1,0 +1,58 @@
+#-*- coding: utf-8 -*-
+
+##############################################
+# MySQL Piwik Database configuration
+
+DB_HOST = 'localhost'
+DB_USER = 'dbuser'
+DB_PASSWORD = 'dbpass'
+DB_DATABASE_NAME = 'piwik'
+PIWIK_PREFIX = 'piwik_'
+
+
+##############################################
+# Apache files
+
+# Format of Apache logs (see /etc/apache2/apache2.conf)
+LOG_FORMAT = "%h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\""
+
+# Apache logs files paths
+APACHE_LOG_FILES = ['/path/to/log/file','/onother/path/to/log/file']
+
+# True - if files from APACHE_LOG_FILES are orderded chronologically by server time, otherwise False
+CHRONOLOGICAL_ORDER = False
+
+# True - if after running script you want to run it again on data chronologically after and from the same server, otherwise False
+CONTINUE = False
+
+# If you want to ignore specific kind of apache log files, you can specify regexp here (http://docs.python.org/library/re.html)
+IGNORED_LOGS = ['/admin/']
+
+##############################################
+# File extensions
+
+# Ignored extentions of downloaded files by visitors
+IGNORED_EXTENSIONS = ['.jpg','.gif','.jpeg','.css','.js','.png','.ico']
+
+# Downloaded files
+DOWNLOADED_EXTENSIONS = ['.zip','.pdf','.doc','.xls','.ppt','.jad','.jar','.cod','.apk']
+
+
+##############################################
+# Other
+
+# Regular expretion to cut urls, the <url> group is taken only
+URL_REGEXPR = '(?P<url>[^;\?]*).*?'
+
+# Piwik configuration
+ID_SITE = 1
+
+# Maximum length of one visit, in seconds
+VISIT_LENGTH = 1800 
+
+
+##############################################
+# Life processing
+
+LIFE = False
+FREQUENCY_OF_READING = 1000

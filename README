@@ -1,0 +1,74 @@
+Apache2Piwik Exporter, version 1.0, June 2011
+
+
+Description
+===========
+Apache2Piwik is a script written in Python to enable exporting
+statistics from Apache logs to Piwik.
+
+
+Requirements
+============
+- Access to Piwik 1.4 Installation.
+- Access to Apache logs with read rights.
+- Python 2.6 with components:
+        - MySQLdb
+        - GeoIP for Python (http://www.maxmind.com/app/python)
+        - httpagentparser (http://pypi.python.org/pypi/httpagentparser/0.8.2)
+
+
+Preparation
+===========
+Before running the script please be sure to:
+- Prepare `settings.py` configuration file - sample in settings.py.sample
+- Create backup of your Piwik MySQL Database
+
+
+Running
+=======
+$ cd apache2piwik
+$ python apache2piwik.py
+
+
+Running with options
+====================
+You can override ID_SITE, APACHE_LOG_FILES, CHRONOLOGICAL_ORDER, CONTINUE from settings.py
+
+Examples:
+$ python apache2piwik.py -c0 -b0 -f "log1.txt;log2.txt" -i3
+$ python apache2piwik.py -c0 -b1 -f "log1.txt" -i3
+
+Usage: apache2piwik.py [start|stop] [OPTIONS]
+
+Options:
+  --version                                  show program's version number and exit
+  -h, --help                                 show this help message and exit
+  -f FILES, --file=FILES                     apache log files, files names should be ;-seperated, (overrides APACHE_LOG_FILES)
+  -b {0 or 1} --chronological_order={0 or 1}    if files are chronologicaly orderd, (overrides CHRONOLOGICAL_ORDER)
+  -c {0 or 1} --continue={0 or 1}               if you want to run script more than one time on one set of data (overrides CONTINUE)
+  -i INT, --id_site=INT                      Piwik id site (overrides ID_SITE)
+  -r, --remove_cache    Remove cache files
+  -g, --goal            Create data for goals
+
+
+Goals
+=====
+If you add new goals after data are in database, run
+$ python apache2piwik.py -g
+to update the goals data in database. 
+Remember to delete piwik_archive_blob and piwik_archive_numeric tables before viewing result in piwik.
+
+Running daemon
+==============
+First set LIFE variable in settings to True and FREQUENCY_OF_READING as you wish.
+To start a daemon on log file run
+$ python apache2piwik.py start
+and to stop
+$ python apache2piwik.py stop
+
+Contact
+=======
+http://clearcode.cc
+contact@clearcode.cc
+
+Copyright (C) 2011 by Clearcode (http://clearcode.cc)
