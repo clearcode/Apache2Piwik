@@ -1,5 +1,11 @@
 #-*- coding: utf-8 -*-
 
+# Apache2Piwik - importing data to Piwik from apache logs 
+# 
+# @link http://clearcode.cc/	
+# @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+
+
 import sys
 sys.path.append('./src') 
 from daemons import Daemon
@@ -774,7 +780,7 @@ class MyDaemon(Daemon):
 
 
 if __name__ == "__main__":
-    parser = OptionParser(usage="%prog [start|stop] [OPTIONS]", version="Apache2Piwik 0.8")
+    parser = OptionParser(usage="%prog [start|stop] [OPTIONS]", version="Apache2Piwik 1.0")
     parser.add_option("-f", "--file", type='string', dest="APACHE_LOG_FILES",
                       action='callback', callback=to_list_callback,
                       help="apache log files, files names should be ;-seperated, (overrides APACHE_LOG_FILES)", metavar="FILES")

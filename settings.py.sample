@@ -1,5 +1,11 @@
 #-*- coding: utf-8 -*-
 
+# Apache2Piwik - importing data to Piwik from apache logs 
+# 
+# @link http://clearcode.cc/	
+# @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+
+
 ##############################################
 # MySQL Piwik Database configuration
 

@@ -1,5 +1,11 @@
 #-*- coding: utf-8 -*-
 
+# Apache2Piwik - importing data to Piwik from apache logs 
+# 
+# @link http://clearcode.cc/	
+# @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+
+
 import unittest
 import re
 
@@ -7,16 +13,6 @@ import sys
 sys.path.append('../src/') 
 import apache_log_format_parser as p
 
-
-class TestDefaultLogRegexpr(unittest.TestCase):
-
-    def setUp(self):
-        pass   
-
-    def test1(self):
-        s = "127.0.0.1 - - [04/Apr/2011:14:06:49 +0200] \"GET /latest/piwik/themes/default/styles.css?cb=6201415e7edf4afd0c2ea94c64467bed HTTP/1.1\" 304 210 \"http://localhost/latest/piwik/index.php?action=systemCheck\" \"Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0\"\n"
-        g = p.default_log.match(s)
-        self.assertEqual(g.group(0),s)
 
 class TestCreateRegexprSimple(unittest.TestCase):
 
@@ -167,13 +163,13 @@ class TestCreateRegexprComplex(unittest.TestCase):
     def test4(self):
         regexpr = '^'+p.h+' '+p.l+' '+p.u+' '+p.t+' \"'+p.r+'\" '+p.s+' '+p.O+' \"'+p.referer+'\"'+'\n$'
         self.assertEqual(regexpr, p.create_regexpr("%h %l %u %t \"%r\" %>s %O \"%{Referer}i\""))
-        g = re.match(regexpr,"127.0.0.1 - - [04/Apr/2011:14:09:39 +0200] \"GET /latest/piwik/themes/default/images/link.gif HTTP/1.1\" 304 186 \"http://localhost/latest/piwik/index.php?action=systemCheck\"\n")
+        g = re.match(regexpr,"127.0.0.1 - - [04/Apr/2011:14:09:39 +0200] \"GET /latest/piwik/themes/default/images/link.gif HTTP/1.1\" 200 186 \"http://localhost/latest/piwik/index.php?action=systemCheck\"\n")
         self.assertNotEqual(None,g)
 
     def test5(self):
         regexpr = '^'+p.h+' '+p.l+' '+p.u+' '+p.t+' \"'+p.r+'\" '+p.s+' '+p.O+' \"'+p.referer+'\" \"'+p.user_agent+'\"'+'\n$'
         self.assertEqual(regexpr, p.create_regexpr("%h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\""))
-        g = re.match(regexpr,"127.0.0.1 - - [04/Apr/2011:14:09:39 +0200] \"GET /latest/piwik/themes/default/images/link.gif HTTP/1.1\" 304 186 \"http://localhost/latest/piwik/index.php?action=systemCheck\" \"Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0\"\n")
+        g = re.match(regexpr,"127.0.0.1 - - [04/Apr/2011:14:09:39 +0200] \"GET /latest/piwik/themes/default/images/link.gif HTTP/1.1\" 200 186 \"http://localhost/latest/piwik/index.php?action=systemCheck\" \"Mozilla/5.0 (X11; Linux i686; rv:2.0) Gecko/20100101 Firefox/4.0\"\n")
         self.assertNotEqual(None,g)
 
     def test6(self):
@@ -185,13 +181,13 @@ class TestCreateRegexprComplex(unittest.TestCase):
     def test7(self):
         regexpr = '^'+p.h+' '+p.l+' '+p.u+' '+p.t+' \"'+p.r+'\" '+p.s+' '+p.O+'\n$'
         self.assertEqual(regexpr, p.create_regexpr("%h %l %u %t \"%r\" %>s %O"))
-        g = re.match(regexpr,"127.0.0.1 - - [04/Apr/2011:13:57:29 +0200] \"OPTIONS * HTTP/1.0\" 200 152\n")
-        self.assertEqual(None,g)
+        g = re.match(regexpr,"127.0.0.1 - - [04/Apr/2011:13:57:29 +0200] \"GET * HTTP/1.0\" 200 152\n")
+        self.assertNotEqual(None,g)
 
     def test8(self):
         regexpr = '^'+p.h+' '+p.l+' '+p.u+' '+p.t+' \"'+p.r+'\" '+p.s+' '+p.O+' \"'+p.referer+'\"'+'\n$'
         self.assertEqual(regexpr, p.create_regexpr("%h %l %u %t \"%r\" %>s %O \"%{Referer}i\""))
-        g = re.match(regexpr,"127.0.0.1 - - [04/Apr/2011:14:06:49 +0200] \"GET /latest/piwik/themes/default/styles.css?cb=6201415e7edf4afd0c2ea94c64467bed HTTP/1.1\" 304 210 \"http://localhost/latest/piwik/index.php?action=systemCheck\"\n")
+        g = re.match(regexpr,"127.0.0.1 - - [04/Apr/2011:14:06:49 +0200] \"GET /latest/piwik/themes/default/styles.css?cb=6201415e7edf4afd0c2ea94c64467bed HTTP/1.1\" 200 210 \"http://localhost/latest/piwik/index.php?action=systemCheck\"\n")
         self.assertNotEqual(None,g)
 
     def test9(self):
