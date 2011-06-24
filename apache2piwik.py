@@ -696,11 +696,11 @@ def apache2piwik(d):
     g = open(d+'/data/not_matched_lines','a')
     for apache_log_file in APACHE_LOG_FILES:
         if apache_log_file.startswith('./'):
-            apache_log_file = apache_log_file[1:]
+            apache_log_file = d+apache_log_file[1:]
         print 'Started processing '+d+apache_log_file+' file...'
         tstart = datetime.now()
         try:
-            f = open(d+apache_log_file,'r')
+            f = open(apache_log_file,'r')
         except IOError, e:
             print str(e).replace('[Errno 2] ','')
             sys.exit(0)
