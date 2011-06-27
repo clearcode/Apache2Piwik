@@ -34,6 +34,9 @@ CONTINUE = False
 # If you want to ignore specific kind of apache log files, you can specify regexp here (http://docs.python.org/library/re.html)
 IGNORED_LOGS = ['/admin/']
 
+# If you want to ignore specific kind of user agents, you can specify regexp here (http://docs.python.org/library/re.html)
+IGNORED_USER_AGENTS = ['bot','crawl','Bot','spider','Spider']
+
 ##############################################
 # File extensions
 

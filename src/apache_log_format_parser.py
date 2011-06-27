@@ -49,10 +49,10 @@ U = '(?P<url>.*?)'
 q = ''
 
 # %H - The request protocol
-H = "(HTTP/0.9|HTTP/1.0|HTTP/1.1)"
+H = "(HTTP/0.9|HTTP/1.0|HTTP/1.1|)"
 
 # "%r"=="%m %U%q %H"  - First line of request
-r = m+' '+U+q+' '+H
+r = m+' '+U+q+' ?'+H
 
 # %s, %>s - Status.  For requests that got internally redirected, this is the status of the *original* request %>s for the last.
 s = "(200|201|202|203|204|205|206)"

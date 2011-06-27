@@ -36,11 +36,14 @@ ID_SITE = s.ID_SITE
 APACHE_LOG_FILES = s.APACHE_LOG_FILES
 CHRONOLOGICAL_ORDER = s.CHRONOLOGICAL_ORDER
 
+if not 'data' in os.listdir('.'):
+    os.mkdir('./data')
+if not 'cache'+str(ID_SITE) in os.listdir('./data/'):
+    os.mkdir('./data/cache'+str(ID_SITE))
+
 ARCHIVES_TO_DELETE = set([])
 db = './data/cache'+str(ID_SITE)+'/still_visiting.db'
 uas_parser = UASparser('./data/')  
-if not 'cache'+str(ID_SITE) in os.listdir('./data/'):
-    os.mkdir('./data/cache'+str(ID_SITE))
 #script_values = bsddb.btopen('./data/script_values.db', 'c') 
 link_visit_action_to_commit = []
 SV_ON_DISK = False
@@ -60,9 +63,10 @@ def f(regex):
     regex = re.compile(regex)
     return regex
 IGNORED_LOGS = map(f,s.IGNORED_LOGS)
-         
-def check_if_ignored(line):
-    for il in IGNORED_LOGS:
+IGNORED_USER_AGENTS = map(f,s.IGNORED_USER_AGENTS)
+
+def check_if_ignored(line,dic): 
+    for il in dic:
         try:
             il.search(line).group(0)
             return True
@@ -630,8 +634,12 @@ def remove_cache(d):
 def apache2piwik_process_line(cursor, line, start, g):
     match = regexpr.search(line)
     match_ignored=ignored_extensions.search(line)
-    if match and (not match_ignored) and (not check_if_ignored(line)): # if line from apache log is ok
+    if match and (not match_ignored) and (not check_if_ignored(line,IGNORED_LOGS)): # if line from apache log is ok
         visitor = define_visit(match,line)
+        
+        if check_if_ignored(visitor['user_agent_original'],IGNORED_USER_AGENTS):
+            return start
+        
         if start:
             start = False
             update_site(cursor,visitor['server_time'])
@@ -681,7 +689,7 @@ def apache2piwik_process_line(cursor, line, start, g):
             index = insert_new_to_db(cursor,visitor)
             STILL_VISITING[visitor_key]=str(index)+'|'+visitor['server_time']+'|'+visitor['server_time']
     else:
-        if not (match_ignored or re.search('(HEAD| 404 | 303 )',line)):
+        if not (match_ignored or re.search('(HEAD| 404 | 303 )',line)) or (not check_if_ignored(line,IGNORED_LOGS)):
             g.write(line)
 
     return start
