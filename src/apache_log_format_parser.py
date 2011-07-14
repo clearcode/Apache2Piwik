@@ -27,7 +27,7 @@ p = "\d{1,5}"
 h = "(?P<ip>"+ip+")"
 
 # %l - Remote logname (from identd, if supplied)
-l = "-"
+l = "(-|[\w\.]*)"
 
 # %u - remote user, same as REMOTE_USER from CGI scripts
 # trzeba tu dodac jeszcze . i &, ale albo się zapętla, albo działa okropnie wolno
