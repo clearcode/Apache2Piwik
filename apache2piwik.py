@@ -7,12 +7,11 @@
 
 
 import sys
-sys.path.append('./src') 
-from daemons import Daemon
+from src.daemons import Daemon
 #import daemon
 from optparse import OptionParser
 import os
-import apache_log_format_parser as p
+from src import apache_log_format_parser as p
 import settings as s
 import re
 import MySQLdb
@@ -24,8 +23,8 @@ from socket import inet_aton, inet_ntoa
 from struct import unpack, pack
 import time
 from hashlib import md5
-import GeoIP
-from uasparser import UASparser  
+import pygeoip
+from src.uasparser import UASparser  
 
 
 #############################################################################
@@ -78,7 +77,7 @@ def check_if_ignored(line,dic):
 DBC = False
 actions = {}
 ignored_browsers = re.compile('(spider|bot|Bot|Spider)')
-gi = GeoIP.new(GeoIP.GEOIP_MEMORY_CACHE)
+gi = pygeoip.GeoIP('lib/GeoIP.dat', pygeoip.MEMORY_CACHE)
 ignored_extensions = re.compile( ('('+'|'.join(s.IGNORED_EXTENSIONS)+')').replace('.','\.').replace('.js','.js[^p]'))
 downloaded_extensions = re.compile(('('+'|'.join(s.DOWNLOADED_EXTENSIONS)+')').replace('.','\.'))
 url_regexpr = re.compile(s.URL_REGEXPR)
@@ -697,7 +696,7 @@ def apache2piwik_process_line(cursor, line, start, g):
 
 
 def apache2piwik(d):
-    conn = MySQLdb.connect (host = s.DB_HOST, user = s.DB_USER, passwd = s.DB_PASSWORD, db = s.DB_DATABASE_NAME)
+    conn = MySQLdb.connect (host = s.DB_HOST, user = s.DB_USER, passwd = s.DB_PASSWORD, db = s.DB_DATABASE_NAME, port=s.DB_PORT)
     cursor = conn.cursor()
     warnings.filterwarnings("ignore", category=MySQLdb.Warning)
     #action_to_dict(cursor)

@@ -10,6 +10,7 @@
 # MySQL Piwik Database configuration
 
 DB_HOST = 'localhost'
+DB_PORT = '3306'
 DB_USER = 'dbuser'
 DB_PASSWORD = 'dbpass'
 DB_DATABASE_NAME = 'piwik'

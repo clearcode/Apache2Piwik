@@ -15,8 +15,9 @@ Requirements
 - Access to Apache logs with read rights.
 - Python 2.6 with components:
         - MySQLdb
-        - GeoIP for Python (http://www.maxmind.com/app/python)
-        - httpagentparser (http://pypi.python.org/pypi/httpagentparser/0.8.2)
+        - pygeoip (http://code.google.com/p/pygeoip)
+        - httpagentparser (http://pypi.python.org/pypi/httpagentparser/0.8.2)        
+        - PyQt4 (http://www.riverbankcomputing.co.uk/software/pyqt/download) --gui version only
 
 
 Preparation
@@ -68,9 +69,28 @@ $ python apache2piwik.py start
 and to stop
 $ python apache2piwik.py stop
 
+Running GUI
+===========
+$ cd Apache2Piwik
+$ python apache2piwikgui.py
+
+Building binaries
+=================
+- Make sure you have all the requirements, including PyQt4
+- Get pyinstaller (http://www.pyinstaller.org/)
+- Run:
+$ python /path/to/pyinstaller/Configure.py
+$ python /path/to/pyinstaller/Makespec.py --onefile Apache2Piwik/apache2piwikgui.py
+$ python /path/to/pyinstaller/Build.py apache2piwikgui.spec
+- Copy Apache2Piwik/lib/* to dist/lib/*
+
 Contact
 =======
-http://clearcode.cc
-contact@clearcode.cc
-
 Copyright (C) 2011 by Clearcode (http://clearcode.cc)
+
+Development Team:
+Małgorzata Jurkiewicz
+Maciej Zawadziński
+Piotr Rzepecki
+
+Contact: office@clearcode.cc
