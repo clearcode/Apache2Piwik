@@ -60,11 +60,13 @@ s = "(200|201|202|203|204|205|206)"
 # %O - Bytes sent, including headers, cannot be zero.
 O = "(-|\d+)"
 
+# Size of response in bytes, excluding HTTP headers. In CLF format, i.e. a '-' rather than a 0 when 
+no bytes are sent.
+b = "(-|\d+)"
+
 # %{Foobar}i - The contents of Foobar: header line(s) in the request sent to the server.
 referer = "(?P<referer>.*?)"
 user_agent = '(?P<user_agent>.*?)'
-
-
 
 def create_regexpr(format):
     """
@@ -111,6 +113,9 @@ def create_regexpr(format):
         elif format.startswith('%O'):
             format = format[2:]
             regexpr = regexpr+O
+        elif format.startswith('%b'):
+            format = format[2:]
+            regexpr = regexpr+b
         elif format.startswith('%m'):
             format = format[2:]
             regexpr = regexpr+m
