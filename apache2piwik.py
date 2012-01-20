@@ -333,6 +333,9 @@ def analize_visit(match,visitor):
 
     visitor['referer_type'] = 3
     visitor['referer_name'] = visitor['referer_keyword'] = ''   
+    if 'referer' not in match:
+        match['referer'] = ''
+
     visitor['referer_url'] = match['referer']
     if visitor['referer_url']=='-':
         visitor['referer_type'] = 1
@@ -439,12 +442,11 @@ def index_of_action(cursor,url):
     h = url #hash(url)
     action_type = downloaded_extensions.search(url) and 3 or 1
 
-    cursor.execute('SELECT count(idaction), idaction FROM '+ s.PIWIK_PREFIX +'log_action WHERE hash=CRC32(%s) AND type=%s LIMIT 1',(h,action_type))  #AND name LIKE %s LIMIT 1',(h,action_type,url))
+    cursor.execute('SELECT count(idaction), idaction FROM '+ s.PIWIK_PREFIX +'log_action WHERE hash=CRC32(%s) AND type=%s GROUP BY idaction LIMIT 1',(h,action_type))  #AND name LIKE %s LIMIT 1',(h,action_type,url))
     action = cursor.fetchone()
-    number = int(action[0])
 
-    if number>0:
-        return action[1] 
+    if not action == None and action[0] > 0:
+        return action[1]
     else:
         sql = 'INSERT INTO '+ s.PIWIK_PREFIX +'log_action (name,hash,type) VALUES (%s,CRC32(%s),%s)'
         cursor.execute(sql,(url,h,action_type))
@@ -563,7 +565,7 @@ def clear_still_visiting(cursor):
             index = take_index(v)
             visit_first_action_time = take_visit_first_action_time(v)
             visit_last_action_time = take_server_time(v)
-            cursor.execute('SELECT idaction_url, count(idaction_url), count(idlink_va) FROM '+s.PIWIK_PREFIX+'log_link_visit_action WHERE idvisit=%s ORDER BY idlink_va ASC',(index,))
+            cursor.execute('SELECT idaction_url, count(idaction_url), count(idlink_va) FROM '+s.PIWIK_PREFIX+'log_link_visit_action WHERE idvisit=%s GROUP BY idaction_url ORDER BY idlink_va ASC',(index,))
             row = cursor.fetchone()
             visit_exit_idaction_url = row[0]
             visit_total_actions = row[1]
@@ -592,7 +594,7 @@ def remove_still_visiting(cursor):
             index = take_index(v)
             visit_first_action_time = take_visit_first_action_time(v)
             visit_last_action_time = take_server_time(v)
-            cursor.execute('SELECT idaction_url, count(idaction_url), count(idlink_va) FROM '+s.PIWIK_PREFIX+'log_link_visit_action WHERE idvisit=%s ORDER BY idlink_va ASC LIMIT 1',(index,))
+            cursor.execute('SELECT idaction_url, count(idaction_url), count(idlink_va) FROM '+s.PIWIK_PREFIX+'log_link_visit_action WHERE idvisit=%s GROUP BY idaction_url ORDER BY idlink_va ASC LIMIT 1',(index,))
             row = cursor.fetchone()
             visit_exit_idaction_url = row[0]
             visit_total_actions = row[1]
@@ -662,7 +664,7 @@ def apache2piwik_process_line(cursor, line, start, g):
                 visit_first_action_time = take_visit_first_action_time(v)
                 visit_last_action_time = take_server_time(v)
                 commit_link_visit_action(cursor)
-                cursor.execute('SELECT idaction_url, count(idaction_url), count(idlink_va) FROM '+s.PIWIK_PREFIX+'log_link_visit_action WHERE idvisit=%s ORDER BY idlink_va ASC',(index,))
+                cursor.execute('SELECT idaction_url, count(idaction_url), count(idlink_va) FROM '+s.PIWIK_PREFIX+'log_link_visit_action WHERE idvisit=%s GROUP BY idaction_url ORDER BY idlink_va ASC',(index,))
                 row = cursor.fetchone()
                 visit_exit_idaction_url = row[0]
                 visit_total_actions = row[1]
