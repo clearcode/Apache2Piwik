@@ -2,7 +2,7 @@
 
 # Apache2Piwik - importing data to Piwik from apache logs 
 # 
-# @link http://clearcode.cc/	
+# @link http://clearcode.cc/
 # @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
 
 
@@ -701,6 +701,14 @@ def apache2piwik(d):
     conn = MySQLdb.connect (host = s.DB_HOST, user = s.DB_USER, passwd = s.DB_PASSWORD, db = s.DB_DATABASE_NAME, port=s.DB_PORT)
     cursor = conn.cursor()
     warnings.filterwarnings("ignore", category=MySQLdb.Warning)
+    cursor.execute("SELECT option_value FROM %soption WHERE option_name LIKE 'version_core'" % (s.PIWIK_PREFIX,))
+    try:
+        r = cursor.fetchall()
+        if not r[0][0] in ['1.4', '1.5', '1.6']:
+            print "Your have unsupported version of piwik: %s" % (r[0][0],)
+    except:
+        print "Your version of piwik is not known."
+    
     #action_to_dict(cursor)
     g = open(d+'/data/not_matched_lines','a')
     for apache_log_file in APACHE_LOG_FILES:
