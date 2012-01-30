@@ -23,7 +23,10 @@ from socket import inet_aton, inet_ntoa
 from struct import unpack, pack
 import time
 from hashlib import md5
-import pygeoip
+try:
+    import pygeoip
+except ImportError:
+    import GeoIP as pygeoip
 from src.uasparser import UASparser  
 
 
