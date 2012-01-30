@@ -86,7 +86,7 @@ $ python /path/to/pyinstaller/Build.py apache2piwikgui.spec
 
 Contact
 =======
-Copyright (C) 2011 by Clearcode (http://clearcode.cc)
+Copyright (C) 2011-2012 by Clearcode (http://clearcode.cc)
 
 Development Team:
 Małgorzata Jurkiewicz
