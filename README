@@ -1,3 +1,8 @@
+DEPRECATED
+==========
+NOTE: This project is deprecated. The new import_logs.py is now included in Piwik core distribution (as of Piwik 1.7.2) in https://github.com/piwik/piwik-log-analytics/
+
+
 Apache2Piwik Exporter, version 1.2, January 2012
 
 This software is released under GPL v3 license:
